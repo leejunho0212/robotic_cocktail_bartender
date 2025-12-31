@@ -3,11 +3,13 @@ import numpy as np
 import whisper
 import tempfile
 import scipy.io.wavfile as wav
+import signal
+import sys
 
 model = whisper.load_model("base")
 
 def speech_to_text(duration=5):
-    device_id = 1      # 마이크(Realtek Audio), MME
+    device_id = 13      # 마이크(Realtek Audio), MME
     fs = 48000
     channels = 2
 
@@ -16,7 +18,7 @@ def speech_to_text(duration=5):
     audio = sd.rec(
         int(duration * fs),
         samplerate=fs,
-        channels=channels,
+        channels=1,
         dtype="float32",
         device=device_id
     )
@@ -38,3 +40,13 @@ def speech_to_text(duration=5):
     text = result["text"].strip()
     print("📝 인식된 텍스트:", text)
     return text
+
+# 종료 신호가 오면 실행될 함수 (유언장)
+def signal_handler(sig, frame):
+    print('강제 종료 신호 감지! 마이크를 내려놓습니다...')
+    # 여기에 sd.stop() 같은 마이크 정지 코드 추가
+    sys.exit(0)
+
+# 신호 등록 (Docker가 끄라고 할 때 signal_handler를 실행해라)
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGINT, signal_handler)

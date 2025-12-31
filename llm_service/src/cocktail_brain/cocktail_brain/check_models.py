@@ -2,7 +2,7 @@ import google.generativeai as genai
 import os
 
 # API 키 설정
-GOOGLE_API_KEY = "AIzaSyDuv5V-7k9-sq_K3NMV12jvg0MApkiU2KE" 
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 def main():
     genai.configure(api_key=GOOGLE_API_KEY)

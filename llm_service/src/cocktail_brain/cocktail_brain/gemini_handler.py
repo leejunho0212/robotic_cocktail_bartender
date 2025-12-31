@@ -1,20 +1,18 @@
 import google.generativeai as genai
+import os
 
-# ==========================================
-# 1. 설정 구역
-# ==========================================
-# 여기에 발급받은 제미나이 API 키를 입력하세요 (따옴표 필수!)
-GOOGLE_API_KEY = "YAIzaSyDuv5V-7k9-sq_K3NMV12jvg0MApkiU2KE"
+
+# 1. 설정 구역 (Gemini API)
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 genai.configure(api_key=GOOGLE_API_KEY)
 
 # 시스템 프롬프트 (로봇의 성격/본능 설정)
-# GPT 코드에 있던 "너는 한국어로 친절하게 답하는 AI 비서야"를 여기에 설정합니다.
 SYSTEM_INSTRUCTION = "너는 한국어로 친절하게 답하는 AI 비서야."
 
-# 모델 초기화 (gemini-1.5-flash가 속도가 빨라 로봇 제어에 유리합니다. 성능형은 pro)
+# 모델 선택
 model = genai.GenerativeModel(
-    model_name='gemini-2.5-flash', 
+    model_name='gemini-2.5-flash-lite', 
     system_instruction=SYSTEM_INSTRUCTION
 )
 

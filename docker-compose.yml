@@ -32,9 +32,24 @@ services:
     container_name: llm_container
     network_mode: host
     privileged: true
-    # --- 아래 두 줄 추가 ---
     stdin_open: true 
     tty: true
-    # ----------------------
+    
+    # key 연결
+    env_file:
+      - .env
+
+    #[수정됨] 경로를 명확하게 고정했습니다.
+    environment:
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+      - PULSE_COOKIE=/root/.config/pulse/cookie
+
     volumes:
       - ./llm_service/src:/root/robotArm_ws/src/user_pkgs
+      
+      # 1. 오디오 소켓 (기존 유지)
+      - /run/user/1000/pulse:/run/user/1000/pulse
+      # 2. 인증 쿠키 (기존 유지하되, 환경변수와 경로 일치시킴)
+      - ~/.config/pulse/cookie:/root/.config/pulse/cookie      
+      # 3. [추가됨] 머신 ID (지문 인식 - 이게 핵심!)
+      - /etc/machine-id:/etc/machine-id:ro
